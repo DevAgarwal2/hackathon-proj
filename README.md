@@ -2,21 +2,21 @@
 
 Two separate projects running together:
 
-## Frontend - hackathon-timepass
+## Frontend - frontend
 
 Next.js application.
 
 ```bash
-cd hackathon-timepass
+cd frontend
 bun run dev
 ```
 
-## Backend - api-endpoint
+## Backend - backend
 
 FastAPI server.
 
 ```bash
-cd api-endpoint
+cd backend
 uv sync
 uvicorn main:app --reload
 ```
@@ -27,8 +27,8 @@ Open **two terminal windows**:
 
 ```bash
 # Terminal 1 - Frontend (http://localhost:3000)
-cd hackathon-timepass && bun run dev
+cd frontend && bun run dev
 
 # Terminal 2 - Backend (http://localhost:8000)
-cd api-endpoint && uvicorn main:app --reload
+cd backend && uvicorn main:app --reload
 ```
