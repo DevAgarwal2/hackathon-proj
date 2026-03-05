@@ -8,7 +8,7 @@ Next.js application.
 
 ```bash
 cd hackathon-timepass
-npm run dev
+bun run dev
 ```
 
 ## Backend - api-endpoint
@@ -27,7 +27,7 @@ Open **two terminal windows**:
 
 ```bash
 # Terminal 1 - Frontend (http://localhost:3000)
-cd hackathon-timepass && npm run dev
+cd hackathon-timepass && bun run dev
 
 # Terminal 2 - Backend (http://localhost:8000)
 cd api-endpoint && uvicorn main:app --reload

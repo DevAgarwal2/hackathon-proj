@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Lock files (optional - uncomment if you don't want to commit)
+# uv.lock
