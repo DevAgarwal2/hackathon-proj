@@ -1,0 +1,15 @@
+[project]
+name = "api-endpoint"
+version = "0.1.0"
+description = "FastAPI backend for hackathon-timepass"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+]
