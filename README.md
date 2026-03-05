@@ -11,12 +11,12 @@ cd frontend
 bun run dev
 ```
 
-## API Service - api
+## FastAPI Endpoint - fastapi-endpoint
 
 FastAPI server for extra API endpoints (Next.js handles main CRUD).
 
 ```bash
-cd api
+cd fastapi-endpoint
 uv sync
 uvicorn main:app --reload
 ```
@@ -29,6 +29,6 @@ Open **two terminal windows**:
 # Terminal 1 - Frontend (http://localhost:3000)
 cd frontend && bun run dev
 
-# Terminal 2 - API Service (http://localhost:8000)
-cd api && uvicorn main:app --reload
+# Terminal 2 - FastAPI Endpoint (http://localhost:8000)
+cd fastapi-endpoint && uvicorn main:app --reload
 ```
