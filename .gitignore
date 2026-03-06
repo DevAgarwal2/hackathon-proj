@@ -1,0 +1,21 @@
+# Logs
+*.log
+server.log
+
+# PDFs and documents
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables (already in subdirectories but added for safety)
+.env
+.env.local
+.env.*.local
