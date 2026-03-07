@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { clearAuth, getRestaurantName } from "@/lib/api";
 
 const navigation = [
   {
@@ -60,28 +61,26 @@ export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { toggleSidebar, open } = useSidebar();
+  const restaurantName = getRestaurantName() || "Restaurant";
 
   const handleLogout = () => {
-    router.push("/");
+    clearAuth();
+    router.push("/auth/login");
   };
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-primary">
-            <img 
-              src="/petpooja-logo.png" 
-              alt="Petpooja" 
-              className="h-full w-full object-contain"
-            />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <TrendingUp className="h-4 w-4" />
           </div>
           <div className="flex flex-col overflow-hidden">
             <span className="truncate text-sm font-semibold tracking-tight">
               Revenue Copilot
             </span>
             <span className="truncate text-xs text-muted-foreground">
-              Restaurant AI
+              {restaurantName}
             </span>
           </div>
         </div>

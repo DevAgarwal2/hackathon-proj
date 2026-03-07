@@ -1,59 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { loginWithCredentials, getRestaurantName } from "@/lib/supabase";
+import { setAuth } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    emailOrMobile: "",
+    email: "",
     password: "",
   });
   const [error, setError] = useState("");
-
-  const validateInput = (value: string): "email" | "mobile" | "invalid" => {
-    const mobileRegex = /^[6-9]\d{9}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (mobileRegex.test(value)) return "mobile";
-    if (emailRegex.test(value)) return "email";
-    return "invalid";
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!formData.emailOrMobile || !formData.password) {
-      setError("Please enter your email/mobile and password");
-      return;
-    }
-
-    const inputType = validateInput(formData.emailOrMobile);
-    if (inputType === "invalid") {
-      setError("Please enter a valid email or 10-digit mobile number");
+    if (!formData.email || !formData.password) {
+      setError("Please enter your email and password");
       return;
     }
 
     setIsLoading(true);
     try {
-      console.log("Login data:", {
-        loginType: inputType,
-        value: formData.emailOrMobile,
-        password: formData.password,
-      });
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      router.push("/");
+      const user = await loginWithCredentials(formData.email, formData.password);
+      if (!user) {
+        setError("Invalid email or password. Please try again.");
+        return;
+      }
+
+      // Fetch restaurant name
+      const name = await getRestaurantName(user.restaurant_id);
+      const restaurantName = name || user.restaurant_id;
+
+      // Store in localStorage
+      setAuth(user.restaurant_id, restaurantName);
+
+      router.push("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError("Invalid credentials. Please try again.");
+      setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -87,32 +80,24 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="emailOrMobile" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Email or Mobile Number
+                <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Email
                 </label>
                 <Input
-                  id="emailOrMobile"
-                  type="text"
-                  placeholder="restaurant@example.com or 9876543210"
-                  value={formData.emailOrMobile}
-                  onChange={(e) => handleChange("emailOrMobile", e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="dosbros@revcopilot.ai"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
                   disabled={isLoading}
                   className={error ? "border-destructive focus-visible:border-destructive" : ""}
                 />
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Password
-                  </label>
-                  <Link
-                    href="/auth/forgot-password"
-                    className="text-xs text-primary hover:text-primary/80 transition-colors"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Password
+                </label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -155,14 +140,10 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Don&apos;t have an account? </span>
-              <Link
-                href="/auth/register"
-                className="font-medium text-primary hover:text-primary/80 transition-colors"
-              >
-                Register restaurant
-              </Link>
+            <div className="mt-4 p-3 rounded-md bg-muted/50 text-xs text-muted-foreground">
+              <p className="font-medium mb-1">Demo credentials:</p>
+              <p>Email: dosbros@revcopilot.ai</p>
+              <p>Password: dosbros123</p>
             </div>
           </CardContent>
         </Card>
