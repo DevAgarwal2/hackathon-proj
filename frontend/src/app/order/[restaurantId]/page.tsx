@@ -160,6 +160,7 @@ export default function VoiceOrderPage() {
   const [error, setError] = useState<string | null>(null);
   const [textInput, setTextInput] = useState("");
   const [showText, setShowText] = useState(false);
+  const [detectedLanguage, setDetectedLanguage] = useState<string>("hi-IN");
 
   // Audio refs
   const mediaRecRef = useRef<MediaRecorder | null>(null);
@@ -246,7 +247,7 @@ export default function VoiceOrderPage() {
     while (ttsQueueRef.current.length > 0) {
       const sentence = ttsQueueRef.current.shift()!;
       try {
-        const res = await sendAgentTTS(sentence, "hi-IN", sessionId, restaurantId);
+        const res = await sendAgentTTS(sentence, detectedLanguage, sessionId, restaurantId);
         if (res.audio_base64) await playAudio(res.audio_base64);
       } catch { /* ignore TTS errors */ }
     }
@@ -254,7 +255,7 @@ export default function VoiceOrderPage() {
     ttsBusyRef.current = false;
     setPhase("idle");
     setAnalyserNode(analyserRef.current);
-  }, [sessionId, restaurantId, playAudio]);
+  }, [sessionId, restaurantId, playAudio, detectedLanguage]);
 
   const enqueueTTS = useCallback((sentence: string) => {
     ttsQueueRef.current.push(sentence);
@@ -398,9 +399,13 @@ export default function VoiceOrderPage() {
               audio_base64: b64,
               session_id: sessionId,
               restaurant_id: restaurantId,
-              language: "hi-IN",
+              language: "auto",
             });
             const transcript = sttRes.transcript?.trim();
+            // Store detected language for TTS
+            if (sttRes.language) {
+              setDetectedLanguage(sttRes.language);
+            }
             if (transcript) {
               setMsgs((prev) => [
                 ...prev,

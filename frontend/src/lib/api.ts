@@ -3,7 +3,7 @@
 // All calls are scoped to the logged-in restaurant via localStorage
 // ============================================================
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_FASTAPI_URL || "http://localhost:8000";
 
 // ---------- Auth helpers ----------
 
@@ -300,7 +300,7 @@ export async function sendAgentText(
  * Send audio to the STT proxy (Next.js route → FastAPI STT).
  * Returns transcript only. Then call sendAgentText for the LLM response.
  */
-export async function sendAgentSTT(req: VoiceProcessRequest): Promise<{ success: boolean; transcript: string }> {
+export async function sendAgentSTT(req: VoiceProcessRequest): Promise<{ success: boolean; transcript: string; language?: string }> {
   const res = await fetch("/api/agent/stt", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

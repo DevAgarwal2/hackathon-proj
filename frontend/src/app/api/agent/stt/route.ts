@@ -44,13 +44,15 @@ export async function POST(req: NextRequest) {
       file: { data: bytes, filename: "audio.webm", contentType: "audio/webm" },
       model: "saaras:v3",
       mode: "transcribe",
-      language_code: language as "hi-IN" | "en-IN" | "unknown",
+      language_code: (language === "auto" ? "unknown" : language) as "hi-IN" | "en-IN" | "unknown",
     });
 
     const transcript = result.transcript ?? "";
-    console.log(`[STT] transcript: "${transcript.slice(0, 80)}"`);
+    // Sarvam returns detected language when using "unknown" / auto-detect
+    const detectedLanguage = (result as any).language_code || language || "hi-IN";
+    console.log(`[STT] transcript: "${transcript.slice(0, 80)}" | lang: ${detectedLanguage}`);
 
-    return NextResponse.json({ success: true, transcript });
+    return NextResponse.json({ success: true, transcript, language: detectedLanguage });
   } catch (e) {
     console.error("[STT] error:", e);
     return NextResponse.json(
