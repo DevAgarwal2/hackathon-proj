@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import {
-  DollarSign,
-  ShoppingCart,
-  TrendingUp,
-  TrendingDown,
+  IndianRupee,
+  Receipt,
+  BarChart3,
   Percent,
-  Mic,
-  ArrowUpRight,
-  ArrowDownRight,
-  AlertTriangle,
-  Star,
+  Crown,
+  EyeOff,
+  ShieldAlert,
+  UtensilsCrossed,
+  ClipboardList,
   Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -228,18 +227,18 @@ export default function DashboardPage() {
         <KpiCard
           title="Total Revenue"
           value={summary.total_revenue}
-          icon={DollarSign}
+          icon={IndianRupee}
           format="currency"
         />
         <KpiCard
           title="Total Orders"
           value={summary.total_orders}
-          icon={ShoppingCart}
+          icon={Receipt}
         />
         <KpiCard
           title="Average Order Value"
           value={Math.round(summary.avg_order_value)}
-          icon={TrendingUp}
+          icon={BarChart3}
           format="currency"
         />
         <KpiCard
@@ -368,7 +367,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center gap-2 pb-3">
-            <Star className="h-4 w-4 text-amber-500" />
+            <Crown className="h-4 w-4 text-amber-500" />
             <CardTitle className="text-base">Top Star Items</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -399,7 +398,7 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center gap-2 pb-3">
-            <TrendingDown className="h-4 w-4 text-amber-500" />
+            <EyeOff className="h-4 w-4 text-amber-500" />
             <CardTitle className="text-base">Under-Promoted Items</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -430,7 +429,7 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center gap-2 pb-3">
-            <AlertTriangle className="h-4 w-4 text-red-500" />
+            <ShieldAlert className="h-4 w-4 text-red-500" />
             <CardTitle className="text-base">Risk Items</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -454,7 +453,7 @@ export default function DashboardPage() {
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ShoppingCart className="h-3 w-3 text-muted-foreground" />
+                  <UtensilsCrossed className="h-3 w-3 text-muted-foreground" />
                   <span className="text-sm">Menu Items</span>
                 </div>
                 <span className="text-sm font-medium">
@@ -463,7 +462,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Mic className="h-3 w-3 text-muted-foreground" />
+                  <ClipboardList className="h-3 w-3 text-muted-foreground" />
                   <span className="text-sm">Order Lines</span>
                 </div>
                 <span className="text-sm font-medium">

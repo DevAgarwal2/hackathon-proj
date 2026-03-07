@@ -128,8 +128,8 @@ Create `.env` files in both directories:
 # Server-side secrets (used in Next.js API routes)
 SARVAM_API_KEY=your_sarvam_api_key
 OPENROUTER_API_KEY=your_openrouter_api_key
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_service_key
+SUPABASE_URL=https://maplbnfnthpjpfkbsgfs.supabase.co
+SUPABASE_KEY=your_supabase_key
 
 # Public env vars
 NEXT_PUBLIC_FASTAPI_URL=http://localhost:8000
@@ -137,8 +137,8 @@ NEXT_PUBLIC_FASTAPI_URL=http://localhost:8000
 
 **fastapi-endpoint/.env:**
 ```bash
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_service_key
+SUPABASE_URL=https://maplbnfnthpjpfkbsgfs.supabase.co
+SUPABASE_KEY=your_supabase_key
 SARVAM_API_KEY=your_sarvam_api_key
 ```
 

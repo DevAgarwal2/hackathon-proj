@@ -2,32 +2,25 @@
 
 import { useState, useEffect, useMemo } from "react";
 import {
-  Package,
-  TrendingUp,
+  Layers,
   ArrowUpRight,
   ArrowDownRight,
-  DollarSign,
-  Zap,
-  ShieldCheck,
-  AlertTriangle,
+  CircleDollarSign,
+  Megaphone,
   ChevronDown,
   ChevronUp,
-  Check,
+  Tag,
   Loader2,
+  BarChart3,
+  Percent,
+  MessageCircle,
+  ArrowRight,
+  Minus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Collapsible,
   CollapsibleContent,
@@ -112,9 +105,6 @@ function formatAction(raw: string): string {
 
 /** Turn the terse backend reason into a proper recommendation sentence. */
 function formatReason(action: string, reason: string, itemName: string, changePercent: number): string {
-  // reason from API looks like:
-  //   "High margin (65.0%) but low sales (1 sold)"
-  //   "Low margin (32.5%) but high demand (45 sold)"
   const isDecrease = action === "DECREASE_PRICE";
 
   if (isDecrease) {
@@ -198,102 +188,82 @@ export default function RevenueOptimizationPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
+    <div className="p-6 space-y-8 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="bg-card rounded-2xl p-6 shadow-sm border">
         <h1 className="text-2xl font-bold tracking-tight">Revenue Optimization</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Smart combos, upsell strategies, and price optimization recommendations
+          Combo pairings, upsell scripts, and pricing adjustments based on your order data
         </p>
       </div>
 
-      {/* Summary KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Combo Opportunities
-            </CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{combos.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              AI-generated from association analysis
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Upsell Candidates
-            </CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{upsells.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {highMarginUpsells} high-margin items
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Price Recommendations
-            </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{priceRecs.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {totalPriceChanges} price change suggestions
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Avg Price Delta
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {priceRecs.length > 0
-                ? `${priceRecs.reduce((s, p) => s + Math.abs(p.changePercent), 0) / priceRecs.length > 0 ? (priceRecs.reduce((s, p) => s + Math.abs(p.changePercent), 0) / priceRecs.length).toFixed(1) : "0"}%`
-                : "N/A"}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Average suggested adjustment</p>
-          </CardContent>
-        </Card>
+      {/* Stats row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-2xl border bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Layers className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Combos</span>
+          </div>
+          <p className="text-2xl font-bold tabular-nums">{combos.length}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">pairing opportunities</p>
+        </div>
+        <div className="rounded-2xl border bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Megaphone className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Upsells</span>
+          </div>
+          <p className="text-2xl font-bold tabular-nums">{upsells.length}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{highMarginUpsells} high-margin</p>
+        </div>
+        <div className="rounded-2xl border bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Tag className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Price Recs</span>
+          </div>
+          <p className="text-2xl font-bold tabular-nums">{priceRecs.length}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{totalPriceChanges} adjustments</p>
+        </div>
+        <div className="rounded-2xl border bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Percent className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Avg Delta</span>
+          </div>
+          <p className="text-2xl font-bold tabular-nums">
+            {priceRecs.length > 0
+              ? `${priceRecs.reduce((s, p) => s + Math.abs(p.changePercent), 0) / priceRecs.length > 0 ? (priceRecs.reduce((s, p) => s + Math.abs(p.changePercent), 0) / priceRecs.length).toFixed(1) : "0"}%`
+              : "—"}
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">avg price shift</p>
+        </div>
       </div>
 
+      {/* Tabs */}
       <Tabs defaultValue="combos">
         <TabsList>
           <TabsTrigger value="combos" className="cursor-pointer">
-            <Package className="h-3.5 w-3.5 mr-1.5" />
-            Smart Combos
+            <Layers className="h-3.5 w-3.5 mr-1.5" />
+            Combos
           </TabsTrigger>
           <TabsTrigger value="upsell" className="cursor-pointer">
-            <Zap className="h-3.5 w-3.5 mr-1.5" />
-            Upsell Rules
+            <Megaphone className="h-3.5 w-3.5 mr-1.5" />
+            Upsell Scripts
           </TabsTrigger>
           <TabsTrigger value="pricing" className="cursor-pointer">
-            <DollarSign className="h-3.5 w-3.5 mr-1.5" />
-            Price Optimization
+            <Tag className="h-3.5 w-3.5 mr-1.5" />
+            Pricing
           </TabsTrigger>
         </TabsList>
 
-        {/* Combos Tab */}
-        <TabsContent value="combos" className="space-y-4 mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Combo frequency chart */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle className="text-base">Co-order Frequency</CardTitle>
+        {/* ── Combos Tab ── */}
+        <TabsContent value="combos" className="mt-6 space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Chart */}
+            <Card className="lg:col-span-2 rounded-2xl">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Pair Frequency</CardTitle>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={comboChartConfig} className="h-[300px] w-full">
+                <ChartContainer config={comboChartConfig} className="h-[320px] w-full">
                   <BarChart
                     data={combos.slice(0, 8)}
                     layout="vertical"
@@ -323,9 +293,9 @@ export default function RevenueOptimizationPage() {
               </CardContent>
             </Card>
 
-            {/* Combo Cards */}
-            <div className="lg:col-span-2 space-y-3">
-              {combos.map((combo) => (
+            {/* Combo list */}
+            <div className="lg:col-span-3 space-y-2">
+              {combos.map((combo, idx) => (
                 <Collapsible
                   key={combo.id}
                   open={expandedCombo === combo.id}
@@ -333,123 +303,101 @@ export default function RevenueOptimizationPage() {
                     setExpandedCombo(expandedCombo === combo.id ? null : combo.id)
                   }
                 >
-                  <Card>
+                  <div className="rounded-2xl border bg-card overflow-hidden shadow-sm">
                     <CollapsibleTrigger asChild>
-                      <CardHeader className="cursor-pointer hover:bg-accent transition-colors duration-200">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <CardTitle className="text-base">{combo.name}</CardTitle>
-                            <Badge variant="secondary" className="text-xs">
-                              {combo.frequency} co-orders
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium text-muted-foreground">
-                              {combo.items.length} items
-                            </span>
-                            {expandedCombo === combo.id ? (
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </div>
+                      <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-accent/50 transition-colors text-left cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground">
+                            {idx + 1}
+                          </span>
+                          <span className="text-sm font-medium">{combo.name}</span>
+                          <span className="text-xs text-muted-foreground tabular-nums">
+                            {combo.frequency}× ordered together
+                          </span>
                         </div>
-                      </CardHeader>
+                        {expandedCombo === combo.id ? (
+                          <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+                        )}
+                      </button>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <CardContent className="pt-0 space-y-3">
-                        <p className="text-sm text-muted-foreground">{combo.recommendation}</p>
-                        <div>
-                          <p className="text-xs text-muted-foreground mb-1">Items included:</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {combo.items.map((item) => (
-                              <Badge key={item} variant="outline" className="text-xs">
-                                {item}
-                              </Badge>
-                            ))}
-                          </div>
+                      <div className="px-4 pb-4 pt-1 border-t space-y-3">
+                        <p className="text-sm text-muted-foreground leading-relaxed">{combo.recommendation}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {combo.items.map((item) => (
+                            <span key={item} className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground">
+                              {item}
+                            </span>
+                          ))}
                         </div>
-                      </CardContent>
+                      </div>
                     </CollapsibleContent>
-                  </Card>
+                  </div>
                 </Collapsible>
               ))}
               {combos.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No combo recommendations available for this restaurant.
+                <p className="text-sm text-muted-foreground text-center py-12">
+                  No combo recommendations yet.
                 </p>
               )}
             </div>
           </div>
         </TabsContent>
 
-        {/* Upsell Tab */}
-        <TabsContent value="upsell" className="space-y-4 mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Smart Upsell Prioritization</CardTitle>
-              <p className="text-xs text-muted-foreground">
-                High-margin items with AI-generated upsell scripts
-              </p>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
-                    <TableHead className="text-right">Margin %</TableHead>
-                    <TableHead className="max-w-[350px]">Upsell Script</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {upsells.map((rule) => (
-                    <TableRow key={rule.id}>
-                      <TableCell className="font-medium">{rule.itemName}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {rule.category}
-                      </TableCell>
-                      <TableCell className="text-right font-mono">₹{rule.unitPrice}</TableCell>
-                      <TableCell className="text-right">
-                        <span
-                          className={`font-medium ${
-                            rule.marginPct >= 70
-                              ? "text-emerald-600"
-                              : rule.marginPct >= 55
-                                ? "text-foreground"
-                                : "text-red-500"
-                          }`}
-                        >
-                          {rule.marginPct}%
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground max-w-[350px]">
-                        {rule.upsellScript}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {upsells.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No upsell priorities available.
-                </p>
-              )}
-            </CardContent>
-          </Card>
+        {/* ── Upsell Tab ── */}
+        <TabsContent value="upsell" className="mt-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {upsells.map((rule) => (
+              <div key={rule.id} className="rounded-lg border bg-card p-4 space-y-3">
+                {/* Item header */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium">{rule.itemName}</p>
+                    <p className="text-xs text-muted-foreground">{rule.category}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-mono font-medium">₹{rule.unitPrice}</p>
+                    <p className={`text-xs font-medium ${rule.marginPct >= 70
+                        ? "text-emerald-600"
+                        : rule.marginPct >= 55
+                          ? "text-foreground"
+                          : "text-amber-600"
+                      }`}>
+                      {rule.marginPct}% margin
+                    </p>
+                  </div>
+                </div>
+                {/* Script */}
+                <div className="rounded-md bg-muted/60 px-3 py-2.5">
+                  <div className="flex items-start gap-2">
+                    <MessageCircle className="h-3.5 w-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                    <p className="text-xs text-muted-foreground leading-relaxed italic">
+                      &ldquo;{rule.upsellScript}&rdquo;
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {upsells.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-12">
+              No upsell priorities available.
+            </p>
+          )}
         </TabsContent>
 
-        {/* Pricing Tab */}
-        <TabsContent value="pricing" className="space-y-4 mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Price change chart */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle className="text-base">Price Changes</CardTitle>
+        {/* ── Pricing Tab ── */}
+        <TabsContent value="pricing" className="mt-6 space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Chart */}
+            <Card className="lg:col-span-2 rounded-2xl">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Suggested Changes</CardTitle>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={priceChartConfig} className="h-[300px] w-full">
+                <ChartContainer config={priceChartConfig} className="h-[320px] w-full">
                   <BarChart
                     data={priceRecs}
                     layout="vertical"
@@ -484,69 +432,50 @@ export default function RevenueOptimizationPage() {
               </CardContent>
             </Card>
 
-            {/* Price Recommendation Cards */}
-            <div className="lg:col-span-2 space-y-3">
+            {/* Price cards */}
+            <div className="lg:col-span-3 space-y-2">
               {priceRecs.map((rec) => {
                 const isIncrease = rec.change > 0;
                 return (
-                  <Card key={rec.id}>
-                    <CardContent className="py-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-semibold">{rec.itemName}</h3>
-                            <Badge variant="outline" className="text-xs">
-                              {rec.action}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{rec.reason}</p>
-                          <div className="flex items-center gap-4 pt-1">
-                            <div>
-                              <p className="text-xs text-muted-foreground">Current</p>
-                              <p className="text-sm font-mono font-medium">₹{rec.currentPrice}</p>
-                            </div>
-                            <div className="flex items-center">
-                              {isIncrease ? (
-                                <ArrowUpRight className="h-4 w-4 text-emerald-600" />
-                              ) : (
-                                <ArrowDownRight className="h-4 w-4 text-amber-600" />
-                              )}
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Suggested</p>
-                              <p
-                                className={`text-sm font-mono font-bold ${isIncrease ? "text-emerald-600" : "text-amber-600"}`}
-                              >
-                                ₹{rec.suggestedPrice}
-                              </p>
-                            </div>
-                            <div className="border-l pl-4">
-                              <p className="text-xs text-muted-foreground">Change</p>
-                              <p
-                                className={`text-sm font-mono font-medium ${isIncrease ? "text-emerald-600" : "text-amber-600"}`}
-                              >
-                                {isIncrease ? "+" : ""}
-                                {rec.changePercent}%
-                              </p>
-                            </div>
-                            <div className="border-l pl-4">
-                              <p className="text-xs text-muted-foreground">Expected Volume</p>
-                              <p className="text-sm font-medium">{rec.expectedVolume}</p>
-                            </div>
-                          </div>
+                  <div key={rec.id} className="rounded-lg border bg-card p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* Name + action */}
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-medium truncate">{rec.itemName}</h3>
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] shrink-0 ${isIncrease
+                                ? "border-emerald-200 text-emerald-700 bg-emerald-50"
+                                : "border-amber-200 text-amber-700 bg-amber-50"
+                              }`}
+                          >
+                            {rec.action}
+                          </Badge>
                         </div>
-                        <Button size="sm" variant="outline" className="ml-4 cursor-pointer">
-                          <Check className="h-3 w-3 mr-1" />
-                          Apply
-                        </Button>
+                        {/* Price row */}
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="font-mono text-muted-foreground">₹{rec.currentPrice}</span>
+                          <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                          <span className={`font-mono font-semibold ${isIncrease ? "text-emerald-600" : "text-amber-600"}`}>
+                            ₹{rec.suggestedPrice}
+                          </span>
+                          <span className={`text-xs ml-1 ${isIncrease ? "text-emerald-600" : "text-amber-600"}`}>
+                            ({isIncrease ? "+" : ""}{rec.changePercent}%)
+                          </span>
+                          <Minus className="h-3 w-3 text-border mx-1" />
+                          <span className="text-xs text-muted-foreground">{rec.expectedVolume} volume</span>
+                        </div>
+                        {/* Reason */}
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{rec.reason}</p>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 );
               })}
               {priceRecs.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No price optimization recommendations available.
+                <p className="text-sm text-muted-foreground text-center py-12">
+                  No pricing recommendations available.
                 </p>
               )}
             </div>

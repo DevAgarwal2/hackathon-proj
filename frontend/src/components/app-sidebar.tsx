@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -72,20 +73,26 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <TrendingUp className="h-4 w-4" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="Revenue Copilot"
+              width={32}
+              height={32}
+              className="object-contain rounded-lg"
+            />
           </div>
           <div className="flex flex-col overflow-hidden">
             <span className="truncate text-sm font-semibold tracking-tight">
               Revenue Copilot
             </span>
-            <span className="truncate text-xs text-muted-foreground">
+            <span className="truncate text-xs text-sidebar-foreground/70">
               {restaurantName}
             </span>
           </div>
         </div>
       </SidebarHeader>
-      <Separator />
+      <Separator className="bg-sidebar-border" />
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
@@ -116,7 +123,7 @@ export function AppSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-center cursor-pointer text-destructive hover:text-destructive hover:bg-destructive/10"
+          className="w-full justify-center cursor-pointer text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent"
           onClick={handleLogout}
         >
           <LogOut className="h-4 w-4" />

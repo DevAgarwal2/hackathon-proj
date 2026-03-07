@@ -1,11 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, UtensilsCrossed } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { GridPattern } from "@/components/grid-pattern";
 import { loginWithCredentials, getRestaurantName } from "@/lib/supabase";
 import { setAuth } from "@/lib/api";
 
@@ -36,11 +45,9 @@ export default function LoginPage() {
         return;
       }
 
-      // Fetch restaurant name
       const name = await getRestaurantName(user.restaurant_id);
       const restaurantName = name || user.restaurant_id;
 
-      // Store in localStorage
       setAuth(user.restaurant_id, restaurantName);
 
       router.push("/dashboard");
@@ -57,101 +64,120 @@ export default function LoginPage() {
     if (error) setError("");
   };
 
+  const fillDemoCredentials = (email: string, password: string) => {
+    setFormData({ email, password });
+    setError("");
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-background to-muted/30">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-            <UtensilsCrossed className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
-          <p className="text-sm text-muted-foreground mt-2">
-            Sign in to manage your restaurant
-          </p>
-        </div>
-
-        <Card className="border-border/50 shadow-lg">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Sign In</CardTitle>
-            <CardDescription>
-              Enter your credentials to access your dashboard
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="dosbros@revcopilot.ai"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  disabled={isLoading}
-                  className={error ? "border-destructive focus-visible:border-destructive" : ""}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Password
-                </label>
-                <div className="relative">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      <GridPattern
+        className="absolute inset-0 w-full h-full fill-primary/5 stroke-primary/10"
+        width={40}
+        height={40}
+        x={0}
+        y={0}
+      />
+      <Card className="w-full max-w-4xl overflow-hidden relative z-10">
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 p-0">
+          <div className="p-6 md:p-8">
+            <form onSubmit={handleSubmit}>
+              <FieldGroup>
+                <div className="flex flex-col items-center gap-2 text-center mb-6">
+                  <h1 className="text-2xl font-bold">Welcome Back</h1>
+                  <p className="text-balance text-muted-foreground">
+                    Sign in to your account
+                  </p>
+                </div>
+                <Field>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleChange("password", e.target.value)}
+                    id="email"
+                    type="email"
+                    placeholder="restaurant@example.com"
+                    value={formData.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
                     disabled={isLoading}
-                    className={error ? "border-destructive focus-visible:border-destructive pr-10" : "pr-10"}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {error && (
-                <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                  {error}
-                </div>
-              )}
-
-              <Button type="submit" className="w-full h-10" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  "Sign In"
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={(e) => handleChange("password", e.target.value)}
+                      disabled={isLoading}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </Field>
+                {error && (
+                  <p className="text-xs text-destructive">{error}</p>
                 )}
-              </Button>
+                <Field>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing in...
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
+                  </Button>
+                </Field>
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/auth/register" className="underline">
+                    Register
+                  </Link>
+                </FieldDescription>
+              </FieldGroup>
             </form>
 
-            <div className="mt-4 p-3 rounded-md bg-muted/50 text-xs text-muted-foreground">
-              <p className="font-medium mb-1">Demo credentials:</p>
-              <p>Email: dosbros@revcopilot.ai</p>
-              <p>Password: dosbros123</p>
+            <div className="mt-6 p-4 rounded-lg border bg-card">
+              <p className="text-sm font-medium text-center mb-3">Demo Credentials</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fillDemoCredentials("dosbros@revcopilot.ai", "dosbros123")}
+                  className="text-xs"
+                >
+                  Dosbros
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fillDemoCredentials("tresamigos@revcopilot.ai", "tresamigos123")}
+                  className="text-xs"
+                >
+                  Tres Amigos
+                </Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-xs text-muted-foreground">
-          Protected by enterprise-grade security
-        </p>
-      </div>
+          </div>
+          <div className="relative hidden md:block bg-muted h-full min-h-[500px]">
+            <div className="absolute left-0 top-0 bottom-0 w-px bg-border z-10" />
+            <Image
+              src="/auth-image.png"
+              alt="Restaurant"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

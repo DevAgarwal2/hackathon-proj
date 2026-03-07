@@ -67,10 +67,10 @@ function WaveformBars({ analyser, phase }: { analyser: AnalyserNode | null; phas
   }, [analyser, phase]);
 
   const colors: Record<Phase, string> = {
-    idle: "bg-stone-600",
-    listening: "bg-amber-400",
-    thinking: "bg-violet-400",
-    speaking: "bg-emerald-400",
+    idle: "bg-[#a89279]",
+    listening: "bg-red-500",
+    thinking: "bg-[#c7a882]",
+    speaking: "bg-emerald-500",
   };
 
   return (
@@ -93,9 +93,9 @@ function OrderPanel({ order }: { order: VoiceCurrentOrder | null }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-stone-800 bg-stone-950 overflow-hidden">
-      <div className="px-4 pt-3 pb-2 border-b border-stone-800/60">
-        <p className="text-[11px] font-semibold tracking-widest uppercase text-stone-500">
+    <div className="rounded-2xl border border-[#d6c8b8] bg-[#faf6f0] overflow-hidden shadow-sm">
+      <div className="px-4 pt-3 pb-2 border-b border-[#e8ddd0]">
+        <p className="text-[11px] font-semibold tracking-widest uppercase text-[#8a7560]">
           Your order
         </p>
       </div>
@@ -103,19 +103,19 @@ function OrderPanel({ order }: { order: VoiceCurrentOrder | null }) {
         {items.map((item, i) => (
           <div key={i} className="flex items-baseline justify-between gap-3">
             <div className="flex items-baseline gap-2 min-w-0">
-              <span className="text-stone-500 text-xs tabular-nums shrink-0">{item.quantity}×</span>
-              <span className="text-sm text-stone-300 truncate">{item.item_name}</span>
+              <span className="text-[#8a7560] text-xs tabular-nums shrink-0">{item.quantity}×</span>
+              <span className="text-sm text-[#3d2e1e] truncate">{item.item_name}</span>
               {item.notes ? (
-                <span className="text-xs text-stone-600 truncate">· {item.notes}</span>
+                <span className="text-xs text-[#a89279] truncate">· {item.notes}</span>
               ) : null}
             </div>
-            <span className="text-sm tabular-nums text-stone-400 shrink-0">₹{item.total}</span>
+            <span className="text-sm tabular-nums text-[#5c4a36] shrink-0">₹{item.total}</span>
           </div>
         ))}
       </div>
-      <div className="px-4 py-3 border-t border-stone-800/60 flex justify-between items-center">
-        <span className="text-xs text-stone-500">Total</span>
-        <span className="text-base font-semibold tabular-nums text-stone-100">
+      <div className="px-4 py-3 border-t border-[#e8ddd0] flex justify-between items-center bg-[#f5ede3]">
+        <span className="text-xs text-[#8a7560]">Total</span>
+        <span className="text-base font-semibold tabular-nums text-[#3d2e1e]">
           ₹{order?.total ?? order?.subtotal ?? 0}
         </span>
       </div>
@@ -129,15 +129,14 @@ function Bubble({ msg }: { msg: Msg }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[78%] text-[14px] leading-relaxed px-4 py-2.5 rounded-2xl ${
-          isUser
-            ? "bg-stone-700 text-stone-100 rounded-br-md"
-            : "bg-stone-900 text-stone-200 rounded-bl-md border border-stone-800"
-        }`}
+        className={`max-w-[78%] text-[14px] leading-relaxed px-4 py-2.5 rounded-2xl ${isUser
+            ? "bg-[#EFE9E1] text-[#2C2C2C] rounded-br-md shadow-sm"
+            : "bg-[#faf6f0] text-[#3d2e1e] rounded-bl-md border border-[#e8ddd0] shadow-sm"
+          }`}
       >
         {msg.text}
         {msg.streaming && (
-          <span className="inline-block w-0.5 h-3.5 bg-stone-400 ml-0.5 align-middle animate-[blink_0.9s_step-end_infinite]" />
+          <span className="inline-block w-0.5 h-3.5 bg-[#a89279] ml-0.5 align-middle animate-[blink_0.9s_step-end_infinite]" />
         )}
       </div>
     </div>
@@ -192,7 +191,7 @@ export default function VoiceOrderPage() {
     return () => {
       streamRef.current?.getTracks().forEach((t) => t.stop());
       audioCtxRef.current?.close();
-      clearAgentSession(sessionId).catch(() => {});
+      clearAgentSession(sessionId).catch(() => { });
     };
   }, [sessionId]);
 
@@ -500,7 +499,7 @@ export default function VoiceOrderPage() {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     ttsQueueRef.current = [];
     ttsBusyRef.current = false;
-    await clearAgentSession(sessionId).catch(() => {});
+    await clearAgentSession(sessionId).catch(() => { });
     setMsgs([]);
     setOrder(null);
     setPhase("idle");
@@ -517,41 +516,40 @@ export default function VoiceOrderPage() {
   };
 
   const micColors: Record<Phase, string> = {
-    idle: "bg-stone-800 text-stone-300 hover:bg-stone-700 hover:text-stone-100",
-    listening: "bg-amber-500 text-stone-950 shadow-[0_0_24px_rgba(245,158,11,0.35)]",
-    thinking: "bg-stone-800 text-violet-400 cursor-not-allowed",
-    speaking: "bg-stone-800 text-emerald-400 cursor-not-allowed",
+    idle: "bg-[#f5ede3] text-[#8a7560] hover:bg-[#ede3d5] hover:text-[#5c4a36] border border-[#d6c8b8]",
+    listening: "bg-[#c83232] text-white shadow-[0_0_24px_rgba(200,50,50,0.3)] border border-[#c83232]",
+    thinking: "bg-[#f5ede3] text-[#c7a882] cursor-not-allowed border border-[#d6c8b8]",
+    speaking: "bg-[#f5ede3] text-emerald-600 cursor-not-allowed border border-[#d6c8b8]",
   };
 
   return (
     <div
-      className="flex h-[100dvh] flex-col bg-stone-950 text-stone-100"
+      className="flex h-[100dvh] flex-col bg-[#f9f3eb] text-[#3d2e1e]"
       style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" }}
     >
       {/* Google Font */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');`}</style>
 
       {/* ── Header ── */}
-      <header className="flex shrink-0 items-center justify-between px-4 py-3 border-b border-stone-800/50">
+      <header className="flex shrink-0 items-center justify-between px-4 py-3 border-b border-[#e8ddd0] bg-[#f9f3eb]">
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push("/order")}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:text-stone-300 hover:bg-stone-800 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8a7560] hover:text-[#5c4a36] hover:bg-[#ede3d5] transition-colors"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
           <div>
-            <p className="text-[14px] font-medium text-stone-100 leading-tight">{restaurantName}</p>
+            <p className="text-[14px] font-medium text-[#3d2e1e] leading-tight">{restaurantName}</p>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className={`inline-block h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
-                phase === "idle" ? "bg-stone-700"
-                : phase === "listening" ? "bg-amber-400"
-                : phase === "thinking" ? "bg-violet-400 animate-pulse"
-                : "bg-emerald-400"
-              }`} />
-              <span className="text-[11px] text-stone-500 font-light">{phaseLabel[phase]}</span>
+              <span className={`inline-block h-1.5 w-1.5 rounded-full transition-colors duration-300 ${phase === "idle" ? "bg-[#c7b9a5]"
+                  : phase === "listening" ? "bg-red-500"
+                    : phase === "thinking" ? "bg-[#c7a882] animate-pulse"
+                      : "bg-emerald-500"
+                }`} />
+              <span className="text-[11px] text-[#8a7560] font-light">{phaseLabel[phase]}</span>
             </div>
           </div>
         </div>
@@ -559,9 +557,8 @@ export default function VoiceOrderPage() {
         <div className="flex items-center gap-1">
           <button
             onClick={() => setShowText((p) => !p)}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-              showText ? "bg-stone-800 text-stone-100" : "text-stone-500 hover:text-stone-300 hover:bg-stone-800"
-            }`}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${showText ? "bg-[#ede3d5] text-[#3d2e1e]" : "text-[#8a7560] hover:text-[#5c4a36] hover:bg-[#ede3d5]"
+              }`}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -569,7 +566,7 @@ export default function VoiceOrderPage() {
           </button>
           <button
             onClick={handleReset}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:text-stone-300 hover:bg-stone-800 transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#8a7560] hover:text-[#5c4a36] hover:bg-[#ede3d5] transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
@@ -594,10 +591,10 @@ export default function VoiceOrderPage() {
                 <div className="mb-8">
                   <WaveformBars analyser={analyserNode} phase={phase} />
                 </div>
-                <p className="text-2xl font-light text-stone-200 tracking-tight">
+                <p className="text-2xl font-light text-[#3d2e1e] tracking-tight">
                   Ready to order?
                 </p>
-                <p className="mt-2 text-sm text-stone-500 font-light max-w-[240px] leading-relaxed">
+                <p className="mt-2 text-sm text-[#8a7560] font-light max-w-[240px] leading-relaxed">
                   Tap the mic and speak naturally. Hindi, English, Hinglish — all work.
                 </p>
                 <div className="mt-6 flex gap-2 flex-wrap justify-center">
@@ -605,7 +602,7 @@ export default function VoiceOrderPage() {
                     <button
                       key={hint}
                       onClick={() => { setShowText(true); setTextInput(hint); }}
-                      className="text-xs px-3 py-1.5 rounded-full border border-stone-700 text-stone-400 hover:border-stone-500 hover:text-stone-200 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-[#d6c8b8] text-[#8a7560] hover:border-[#c83232] hover:text-[#c83232] transition-colors bg-[#faf6f0]"
                     >
                       {hint}
                     </button>
@@ -625,9 +622,9 @@ export default function VoiceOrderPage() {
 
           {/* Error */}
           {error && (
-            <div className="mx-4 mb-2 rounded-xl border border-red-900/40 bg-red-950/20 px-4 py-2 text-xs text-red-400 flex items-center justify-between">
+            <div className="mx-4 mb-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs text-red-600 flex items-center justify-between">
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="ml-3 text-red-600 hover:text-red-400">✕</button>
+              <button onClick={() => setError(null)} className="ml-3 text-red-400 hover:text-red-600">✕</button>
             </div>
           )}
 
@@ -635,7 +632,7 @@ export default function VoiceOrderPage() {
           {showText && (
             <form
               onSubmit={(e) => { e.preventDefault(); handleSendText(textInput); }}
-              className="mx-4 mb-3 flex items-center gap-2 rounded-xl border border-stone-700 bg-stone-900 px-4 py-2.5"
+              className="mx-4 mb-3 flex items-center gap-2 rounded-xl border border-[#d6c8b8] bg-[#faf6f0] px-4 py-2.5 shadow-sm"
             >
               <input
                 type="text"
@@ -644,12 +641,12 @@ export default function VoiceOrderPage() {
                 placeholder="Type your order..."
                 disabled={busy}
                 autoFocus
-                className="flex-1 bg-transparent text-sm text-stone-100 placeholder-stone-600 outline-none disabled:opacity-40"
+                className="flex-1 bg-transparent text-sm text-[#3d2e1e] placeholder-[#b5a48f] outline-none disabled:opacity-40"
               />
               <button
                 type="submit"
                 disabled={!textInput.trim() || busy}
-                className="text-xs font-semibold text-amber-400 disabled:text-stone-700 transition-colors"
+                className="text-xs font-semibold text-[#c83232] disabled:text-[#c7b9a5] transition-colors"
               >
                 Send
               </button>
@@ -661,9 +658,8 @@ export default function VoiceOrderPage() {
             <button
               onClick={handleMicTap}
               disabled={busy}
-              className={`relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-200 ${micColors[phase]} ${
-                !busy ? "active:scale-95" : ""
-              }`}
+              className={`relative flex h-16 w-16 items-center justify-center rounded-full transition-all duration-200 ${micColors[phase]} ${!busy ? "active:scale-95" : ""
+                }`}
             >
               {phase === "listening" ? (
                 <>
@@ -671,7 +667,7 @@ export default function VoiceOrderPage() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <rect x="6" y="6" width="12" height="12" rx="2" />
                   </svg>
-                  <span className="absolute inset-0 rounded-full animate-ping bg-amber-500/20" />
+                  <span className="absolute inset-0 rounded-full animate-ping bg-red-500/20" />
                 </>
               ) : (
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -681,17 +677,17 @@ export default function VoiceOrderPage() {
                 </svg>
               )}
             </button>
-            <p className="text-[11px] text-stone-500 font-light select-none">
+            <p className="text-[11px] text-[#8a7560] font-light select-none">
               {phase === "listening" ? "Tap to stop · Auto-stops on silence" : phaseLabel[phase]}
             </p>
           </div>
         </div>
 
         {/* Desktop order sidebar */}
-        <div className="hidden w-64 shrink-0 border-l border-stone-800/50 p-4 lg:block overflow-y-auto">
+        <div className="hidden w-64 shrink-0 border-l border-[#e8ddd0] p-4 lg:block overflow-y-auto bg-[#faf6f0]">
           <OrderPanel order={order} />
           {(order?.items?.length ?? 0) === 0 && (
-            <p className="text-xs text-stone-600 text-center mt-8 leading-relaxed">
+            <p className="text-xs text-[#b5a48f] text-center mt-8 leading-relaxed">
               Items appear here as you add them
             </p>
           )}
@@ -700,14 +696,14 @@ export default function VoiceOrderPage() {
 
       {/* Mobile order bar */}
       {(order?.items?.length ?? 0) > 0 && (
-        <div className="flex shrink-0 items-center justify-between border-t border-stone-800/50 bg-stone-900 px-5 py-3 lg:hidden">
+        <div className="flex shrink-0 items-center justify-between border-t border-[#e8ddd0] bg-[#faf6f0] px-5 py-3 lg:hidden">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-stone-950">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#c83232] text-[10px] font-bold text-white">
               {order?.items?.length}
             </div>
-            <span className="text-sm text-stone-300">{order?.items?.length} item{(order?.items?.length ?? 0) !== 1 ? "s" : ""}</span>
+            <span className="text-sm text-[#5c4a36]">{order?.items?.length} item{(order?.items?.length ?? 0) !== 1 ? "s" : ""}</span>
           </div>
-          <span className="text-sm font-semibold tabular-nums text-stone-100">
+          <span className="text-sm font-semibold tabular-nums text-[#3d2e1e]">
             ₹{order?.total ?? order?.subtotal ?? 0}
           </span>
         </div>
