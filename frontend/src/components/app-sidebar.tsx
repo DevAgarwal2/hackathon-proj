@@ -69,8 +69,12 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4 px-3">
         <div className="flex items-center gap-2 overflow-hidden">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <TrendingUp className="h-4 w-4" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-primary">
+            <img 
+              src="/petpooja-logo.png" 
+              alt="Petpooja" 
+              className="h-full w-full object-contain"
+            />
           </div>
           <div className="flex flex-col overflow-hidden">
             <span className="truncate text-sm font-semibold tracking-tight">

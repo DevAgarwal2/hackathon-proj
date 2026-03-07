@@ -43,9 +43,9 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      console.log("Login data:", {
-        email: formData.email,
-        password: formData.password,
+      console.log("Login Successful", {
+        // email: formData.email,  //For security reasons
+        // password: formData.password,
       });
       await new Promise((resolve) => setTimeout(resolve, 1500));
       router.push("/dashboard");
@@ -126,7 +126,11 @@ export default function LoginPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
                     </button>
                   </div>
                 </Field>
