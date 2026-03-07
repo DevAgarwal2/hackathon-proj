@@ -602,7 +602,7 @@ export function buildTools(sessionId: string) {
               restaurant_id,
               order_type: "Voice",
               order_source: "AI Agent",
-              customer_phone: order.customer_phone || null,
+              customer_phone: order.customer_phone ? parseInt(order.customer_phone.replace(/\D/g, ''), 10) || null : null,
               table_number: table_number ?? null,
               item_id: item.item_id,
               item_name: item.item_name,
